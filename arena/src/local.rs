@@ -85,19 +85,19 @@ impl<T> Arena<T> {
         let slabs = slabs.as_mut_ptr();
         let slab = unsafe { &mut *slabs.add(slab_index) };
 
-        let ptr = slab.end_ptr();
-
         if let Some(((prev, prev_len), value)) = previous_slab {
             let prev_slab = unsafe { &mut *slabs.add(prev) };
 
             prev_slab.split_off_extend(prev_len, slab);
             unsafe { slab.push(value) };
-            slab.extend(iter);
         }
+        slab.extend(iter);
+        let ptr = slab.start_ptr();
 
         let len = slab.len();
 
         self.len.set(self.len.get() + len);
+        dbg!(len);
         unsafe { core::slice::from_raw_parts_mut(ptr, len) }
     }
 
@@ -145,6 +145,7 @@ impl<T> Arena<T> {
                 let len = unsafe { new_end.offset_from(end) as usize };
                 self.len.set(total_len);
 
+                dbg!(len);
                 unsafe { core::slice::from_raw_parts_mut(end, len) }
             };
         }

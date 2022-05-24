@@ -28,6 +28,11 @@ impl<T> Slab<T> {
     }
 
     #[cfg_attr(debug_assertions, track_caller)]
+    pub fn start_ptr(&mut self) -> *mut T {
+        unsafe { self.items.as_mut_ptr() }
+    }
+
+    #[cfg_attr(debug_assertions, track_caller)]
     pub fn end_ptr(&mut self) -> *mut T {
         unsafe { self.items.as_mut_ptr().add(self.items.len()) }
     }
