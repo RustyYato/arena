@@ -24,6 +24,10 @@ impl<'a, T> ArenaRef<'a, T> {
         self.arena.is_empty()
     }
 
+    pub fn as_ref(&mut self) -> ArenaRef<'_, T> {
+        Self { arena: self.arena }
+    }
+
     #[must_use]
     pub fn insert(&mut self, value: T) -> &'a mut T {
         self.arena.insert(value)
